@@ -1,9 +1,6 @@
 import Axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-//pinata, google
-//帳號 : kryptocampbatch3team2@gmail.com
-//密碼 : Batch3@Final@Project@Team2
 const PINATA_API_KEY = process.env.PINATA_API_KEY;
 const PINATA_API_SECRET = process.env.PINATA_API_SECRET;
 const PINATA_JWT = process.env.PINATA_JWT;
