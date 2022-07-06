@@ -1,9 +1,9 @@
 import Axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 
-const PINATA_API_KEY = process.env.PINATA_API_KEY;
-const PINATA_API_SECRET = process.env.PINATA_API_SECRET;
-const PINATA_JWT = process.env.PINATA_JWT;
+const PINATA_API_KEY = process.env.REACT_APP_PINATA_API_KEY;
+const PINATA_API_SECRET = process.env.REACT_APP_PINATA_API_SECRET;
+const PINATA_JWT = process.env.REACT_APP_PINATA_JWT;
 
 const URL_TEST_AUTHENTICATION = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
 

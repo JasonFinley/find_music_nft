@@ -12,9 +12,9 @@ import { infuraProvider } from "wagmi/providers/infura";
 const REACT_APP_INFURA_ID = process.env.REACT_APP_INFURA_ID;
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [chain.rinkeby, chain.localhost],
+  [chain.localhost],
   [
-    infuraProvider({ infuraId: REACT_APP_INFURA_ID  }),
+
     jsonRpcProvider({
       rpc: (chain) => ({
         http: `http://localhost:8545`,

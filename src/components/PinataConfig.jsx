@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
-import { PinataConfigContext } from '../contexts/PinataConfigContext';
+import Swal from 'sweetalert2';
+import { ContextPinataConfig } from '../contexts/ContextPinataConfig';
 
 const PinataConfig = () =>{
 
@@ -7,7 +8,7 @@ const PinataConfig = () =>{
     const [api_kay, setAPIKey] = useState( "" );
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [api_secret, setAPISecret] = useState( "" );
-    const pinataConfigContext = useContext( PinataConfigContext );
+    const pinataConfigContext = useContext( ContextPinataConfig );
     function ApiKeyChange( el ){ setAPIKey( el.target.value ); }
     function ApiSecretChange( el ){ setAPISecret( el.target.value ); }
 
@@ -20,26 +21,32 @@ const PinataConfig = () =>{
             console( "Use default .env .....!!" );
             isDone = true;
         }else{
-            alert("please input your pinata api key and api secret. i dont save your key!!");
+            Swal.fire("please input your pinata api key and api secret. i dont save your key!!");
             isDone = false;
         }
 
         if( isDone ){
             //
-            alert("please go to home page, have fun..");
+            Swal.fire("please go to home page, have fun..");
         }
     }
 
     return (
-        <div>
+        <div className="d-flex flex-column align-items-center justify-content-center">
             <div>
-                <p>pinata api key : </p>
-                <input type="text" value={ api_kay } onChange={ ApiKeyChange }></input>
-                <p>pinata api secret : </p>
-                <input type="text" value={ api_secret } onChange={ ApiSecretChange }></input>
+                <div>
+                    <p>pinata api key : </p>
+                    <input type="text" value={ api_kay } onChange={ ApiKeyChange }></input>
+                    <p>pinata api secret : </p>
+                    <input type="text" value={ api_secret } onChange={ ApiSecretChange }></input>
+                </div>
+                <div>
+                    <button onClick={ pinataConfirm }>確定</button>
+                </div>
             </div>
             <div>
-                <button onClick={ pinataConfirm }>確定</button>
+                <div>Pinata API Key = { pinataConfigContext.PINATA.API_KEY }</div>
+                <div>Pinata API Secret = { pinataConfigContext.PINATA.API_SECRET }</div>
             </div>
         </div>
     )

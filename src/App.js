@@ -1,7 +1,7 @@
 import { WagmiConfig } from 'wagmi';
 import wagmiClient from './helpers/wagmi.client' 
 import Router from './Router';
-import PinataConfigContextProvider from './contexts/PinataConfigContext';
+import ContextProviderPinataConfig from './contexts/ContextPinataConfig';
 
 function App() {
 
@@ -10,9 +10,9 @@ function App() {
 
   return (
     <WagmiConfig client={ wagmiClient }>
-      <PinataConfigContextProvider pinata_api_key={ pinata_default_api_key } pinata_api_secret={ pinata_default_api_secret }>
+      <ContextProviderPinataConfig pinata_api_key={ pinata_default_api_key } pinata_api_secret={ pinata_default_api_secret }>
         <Router />
-      </PinataConfigContextProvider>
+      </ContextProviderPinataConfig>
     </WagmiConfig>
   );
 }

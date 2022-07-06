@@ -4,11 +4,13 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
 
-    using Counters for Counters.Counter;
+    struct CreatorWhiteListData{
+        address creator;
+        string dataURL;
+    }
 
     struct MusicNFTData{
         address creator;
@@ -16,20 +18,27 @@ contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
         string metaURL;
     }
 
-    Counters.Counter private _tokenIDs;
-
     address private _contract_owner;
-    mapping( address => bool ) private _isCreatorWhiteList;
+
     mapping( address => MusicNFTData[] ) private _musicNFTData;
     // address => id => idx
     // _musicNFTDataIdx[ address ][ tokenID] => token Idx
     mapping( address => mapping( uint256 => uint256 ) ) private _musicNFTDataIdx;
 
+    mapping( address => bool ) private _isCreatorWhiteList;
+    CreatorWhiteListData[] private _creatorWhiteListData;
+    mapping( address => uint256 ) private _creatorWhiteListDataIdx;
+
     event EventCreateMusicNFT( address owner, uint256 tokenID, string url );
+    event EventAddWhiteList( address creator, uint256 index, string url );
 
     constructor() ERC721("Jason Finley Music NFT", "JFMN") {
         _contract_owner = msg.sender;
         _isCreatorWhiteList[ msg.sender ] = true;
+    }
+
+    function getContractOwner() public view returns ( address ) {
+        return _contract_owner;
     }
 
     function getMusicNFTByOwner( address owner ) public view returns( MusicNFTData[] memory ) {
@@ -51,15 +60,15 @@ contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
         return data;
     }
 
-    function getURLByTokenID( uint256 tokenID ) internal view returns ( string memory ) {
+    function getURLByTokenID( uint256 tokenID ) public view returns ( string memory ) {
         return tokenURI( tokenID);
     }
 
-    function getOwnerByTokenID( uint256 tokenID ) internal view returns ( address ){
+    function getOwnerByTokenID( uint256 tokenID ) public view returns ( address ){
         return ownerOf( tokenID );
     }
 
-    function getTokenIDByOwnerIndex( address owner, uint256 index ) internal view returns ( uint256 ) {
+    function getTokenIDByOwnerIndex( address owner, uint256 index ) public view returns ( uint256 ) {
         return tokenOfOwnerByIndex( owner, index );
     }
 
@@ -67,21 +76,41 @@ contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
         return balanceOf( owner );
     }
 
-    function getTotalTokenIDs() internal view returns ( uint256 ) {
+    function getTotalTokenIDs() public view returns ( uint256 ) {
         return totalSupply();
     }
 
-    function setWhitelist( address creator ) public {
+    function getWhiteListData() public view returns ( CreatorWhiteListData[] memory ){
+        return _creatorWhiteListData;
+    }
+
+    function getTotalWhiteList() public view returns ( uint256 ){
+        return _creatorWhiteListData.length;
+    }
+
+    function getCreatorData( address creator ) public view returns ( CreatorWhiteListData memory ) {
+        require( creator != address(0), "fail address..!!" );
+        uint256 idx = _creatorWhiteListDataIdx[ creator ];
+        return _creatorWhiteListData[ idx ];
+    }
+
+    function addCreatorWhitelist( address creator ) public {
         require( _contract_owner == msg.sender, "you are not contract owner!!" );
         _isCreatorWhiteList[ creator ] = true;
     }
 
-    function createMusicNFT( string memory musicMetaURL ) public returns ( uint256 ) {
-        uint256 tokenID;
+    function setCreatorWhiteListData( string memory createURL ) public {
+
+        require( _isCreatorWhiteList[ msg.sender ] == true, "you are not in the whitelist !!" );
+
+        _creatorWhiteListDataIdx[ msg.sender ] = _creatorWhiteListData.length;
+        _creatorWhiteListData.push( CreatorWhiteListData( msg.sender, createURL ) );
+        emit EventAddWhiteList( msg.sender, _creatorWhiteListDataIdx[ msg.sender ], createURL );
+    }
+
+    function createMusicNFT( uint256 tokenID, string memory musicMetaURL ) public {
 
         require( _isCreatorWhiteList[ msg.sender ] == true, "you are not in whitelist!!" );
-
-        tokenID = _tokenIDs.current();
 
         _mint( msg.sender, tokenID );
         _setTokenURI( tokenID, musicMetaURL );
@@ -89,10 +118,7 @@ contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
         _musicNFTDataIdx[ msg.sender ][ tokenID ] = _musicNFTData[ msg.sender ].length;
         _musicNFTData[ msg.sender ].push( MusicNFTData( msg.sender, tokenID, musicMetaURL ) );
 
-        _tokenIDs.increment();
         emit EventCreateMusicNFT( msg.sender, tokenID, musicMetaURL );
-        
-        return tokenID;
     }
 
     function _baseURI() internal pure override returns (string memory) {

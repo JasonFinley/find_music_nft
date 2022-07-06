@@ -1,8 +1,8 @@
 import Layout from "../components/Layout";
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAccount, useConnect, useDisconnect, useBalance, useNetwork, chain } from "wagmi";
-import { PinataConfigContext } from "../contexts/PinataConfigContext"
 import PinataConfig from "../components/PinataConfig";
+import ContractInfo from "../components/ContractInfo";
 
 const Initpage = () => {
 
@@ -10,16 +10,13 @@ const Initpage = () => {
   const { data: account } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: accountBalance, isError : isErrorBalance, isLoading : isLoadingBalance } = useBalance( { addressOrName: account?.address, } );
-  const { activeChain, switchNetwork } = useNetwork({ chainId: chain.rinkeby.id });
-  const pinataContext = useContext( PinataConfigContext );
+  const { activeChain, switchNetwork } = useNetwork({ chainId: chain.localhost.id });
 
   useEffect(() => {
-    if (activeChain && activeChain.id !== chain.rinkeby.id) {
-      switchNetwork(chain.rinkeby.id);
+    if (activeChain && activeChain.id !== chain.localhost.id) {
+      switchNetwork(chain.localhost.id);
     }
   }, [activeChain, switchNetwork]);
-
-  
 
   return (
     <Layout>
@@ -48,13 +45,8 @@ const Initpage = () => {
             </div>
           )
         }
-        <div>
-          <PinataConfig/>
-        </div>
-        <div>
-          <div>myContextKey = { pinataContext?.PINATA.API_KEY }</div>
-          <div>myContextSecret = { pinataContext?.PINATA.API_SECRET }</div>
-        </div>
+        <div> <PinataConfig/> </div>
+        <div> <ContractInfo/> </div>
       </div>
     </Layout>
   );
