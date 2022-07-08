@@ -33,7 +33,7 @@ contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
     event EventAddWhiteList( address creator );
     event EventUpdateWhiteList( address creator, uint256 index, string url );
 
-    constructor() ERC721("Jason Finley Music NFT", "JFMN") {
+    constructor() ERC721("JasonFinleyMusicNFT", "JFMN") {
         _contract_owner = msg.sender;
         _isCreatorWhiteList[ msg.sender ] = true;
     }

@@ -96,7 +96,14 @@ const Homepage = () => {
         <h1>Music NFT</h1>
         <div>給玩音樂的自由創作者上鏈的小地方</div>
         <div>想要如何玩音樂，就如何玩</div>
-        <div>說不定玩一玩，還能賣音樂賺錢 !! Who knows</div>
+        <div>說不定玩一玩，還能創作音樂賺錢 !! Who knows</div>
+        
+        <ul> <h3> 目前想法 : </h3>
+          <li>原創者 - 創作音樂小曲並上傳到IPFS, 區塊鏈記錄相關資訊。</li>
+          <li>類創作者 - 購買原創者的音樂或版權。再自行創作或合成新曲風之類的。</li>
+          <li>粉絲 - 購買創作者的音樂或版權。</li>
+        </ul>
+
         <div>加入白名單開始請
           <a href="mailto:jasonfinley821@gmail.com"><u><font color="red">連絡站長</font></u></a>，
           並提供MetaMask錢包地址

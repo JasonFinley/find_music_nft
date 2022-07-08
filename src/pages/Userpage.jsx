@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
 import { useContext, useEffect, useState } from 'react';
-import { useAccount, useContractRead } from "wagmi";
+import { useAccount, useBalance, useContractRead } from "wagmi";
 import ContextContractAddressABI from "../contexts/ContextContract";
 import MusicNFTCard from "../components/MusicNFTCard";
 import { pinataGetMetaData } from "../modules/pinata";
@@ -8,6 +8,7 @@ import { pinataGetMetaData } from "../modules/pinata";
 const Userpage = () => {
 
   const { data : account } = useAccount();
+  const { data: accountBalance, isError : isErrorBalance, isLoading : isLoadingBalance } = useBalance( { addressOrName: account?.address, } );
   const contractAddressABI = useContext( ContextContractAddressABI );
 
   const [ musicNFTData, setMusicNFTData ] = useState([]);
@@ -70,6 +71,10 @@ const Userpage = () => {
   return (
     <Layout>
       <div className="d-flex flex-column align-items-center justify-content-center">
+        <div>
+          <h3>錢包: { account? ( account.address ):( "請連接MetaMask" ) }</h3>
+          <h3>餘額: { accountBalance?.formatted } { accountBalance?.symbol }</h3>
+        </div>
         <div>
           {
             musicNFTData?.map( ( item ) => { 
