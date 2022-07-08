@@ -19,7 +19,6 @@ const Userpage = () => {
     const MusicNFT = [];
     for( let i = 0 ; i < result.length ; i++ )
     {
-      console.log( result[i] );
         await pinataGetMetaData( result[i].MusicNFTMetaURL ).then( ( res ) => {
           MusicNFT.push({
             TokenID : result[i].MusicNFTTokenID,
@@ -75,11 +74,13 @@ const Userpage = () => {
           <h3>錢包: { account? ( account.address ):( "請連接MetaMask" ) }</h3>
           <h3>餘額: { accountBalance?.formatted } { accountBalance?.symbol }</h3>
         </div>
-        <div>
+        <div className="row">
           {
             musicNFTData?.map( ( item ) => { 
               return ( 
-                <MusicNFTCard key={ item.TokenID } 
+                <MusicNFTCard className="col"
+                  key={ item.TokenID }
+                  songName = { item.MusicName }
                   owner={ item.Creator }
                   imageURL={ item.ImageURL }
                   audioURL={ item.MusicURL }

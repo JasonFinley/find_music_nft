@@ -122,11 +122,12 @@ const Homepage = () => {
           )
         }
         <h3>創作者</h3>
-        <div>
+        <div className="row">
           {
             creatorData?.map( (item) => {
                 return (
-                  <CreatorCard key={ item.Creator } 
+                  <CreatorCard className="col"
+                            key={ item.Creator } 
                             creator={ item.CreatorName }
                             creatorURL={ item.ImageURL }
                             summary={ item.Summary }

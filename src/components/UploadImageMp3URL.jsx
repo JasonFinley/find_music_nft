@@ -1,9 +1,10 @@
 
-import { useEffect, useState } from 'react';
-import MusicNFTCard from './MusicNFTCard';
+import { useEffect, useState, useContext } from 'react';
 import Swal from 'sweetalert2'
 import { useAccount, useConnect, useDisconnect, useContractRead, useContractWrite, useContractEvent } from "wagmi"
 import { pinataPinMetaData, pinataPinFileByImageURL, pinataPinFileByMusicURL, pinataGetIPFSFillPath } from "../modules/pinata";
+import ContextContractAddressABI from "../contexts/ContextContract";
+import { v4 as uuidv4 } from 'uuid';
 
 const UploadImageMp3URL = () => {
 
@@ -14,6 +15,21 @@ const UploadImageMp3URL = () => {
 
     const [ previewImage, setPreviewImage ] = useState("");
     const [ previewMp3, setPreviewMp3 ] = useState("");
+    const [ songName, setSongName ] = useState("");
+
+    const contractAddressABI = useContext( ContextContractAddressABI );
+
+    const onChangeSongName = ( e ) => {
+        setSongName( e.target.value );
+    }
+
+    const createMusicNFT = useContractWrite( 
+        contractAddressABI,
+        "createMusicNFT",
+        { 
+          onError(error){ console.log( error.message ); }
+        }
+      );
 
     const onChangeImage = ( e ) => {
         const file = e.target.files[0];
@@ -64,6 +80,13 @@ const UploadImageMp3URL = () => {
         return previewString;
     }
 
+    const cidTOuuidString = ( cid ) => {
+        const strRandomUUID = uuidv4( cid );
+    //    let strUUID = strRandomUUID.replace("-", "").replace("-", "").replace("-", "").replace("-", "");
+        const strUUID = strRandomUUID.replace("-", "");
+        return strUUID;
+    }
+
     const uploadDataToPinata = async ( creatorName, musicName, imageURL, musicURL, summary, lyric ) => {
         if( account ){
 
@@ -73,25 +96,28 @@ const UploadImageMp3URL = () => {
             const pinataImage = await pinataPinFileByImageURL( imageURL );
             const pinataMusic = await pinataPinFileByMusicURL( musicURL );
 
+            const musicNFTUUID = cidTOuuidString( pinataMusic.data.IpfsHash );
+            const musicNFTTokenID = parseInt( '0x' + musicNFTUUID, 16 );
+
+            const fileName = musicName + ".json";
             const metaData = {
-                file_name : musicName + ".json",
-                image_info : {
                     Creator : account?.address,
+                    TokenID : musicNFTTokenID,
                     MusicName : musicName,
                     ImageURL : pinataGetIPFSFillPath( pinataImage.data.IpfsHash ),
                     MusicURL : pinataGetIPFSFillPath( pinataMusic.data.IpfsHash ),
                     Summary : summary,
                     Lyric : lyric,
                     create_time : new Date().toLocaleString().replace(',',''),
-                }
             };
 
-            pinataPinMetaData( metaData ).then( ( pinataMetaData ) => {
+            pinataPinMetaData( fileName, metaData ).then( ( pinataMetaData ) => {
 
                 const ipfsMetaDataURL = pinataGetIPFSFillPath( pinataMetaData.data.IpfsHash );
+
                 //上鏈..
                 console.log( "setting data : ", ipfsMetaDataURL );
-    
+                createMusicNFT.write( { args : [ musicNFTTokenID, ipfsMetaDataURL ] } );
                 Swal.close();
 
             });
@@ -105,7 +131,7 @@ const UploadImageMp3URL = () => {
 
         const my_summary = document.querySelector("#customer_summary").value;
         const my_lyric = document.querySelector("#customer_lyric").value;
-        const my_preview_html = getPreviewhtml( account?.address, "my song", previewImage, previewMp3, my_summary, my_lyric );
+        const my_preview_html = getPreviewhtml( account?.address, songName, previewImage, previewMp3, my_summary, my_lyric );
 
         Swal.fire({
             title : '預覽',
@@ -115,7 +141,7 @@ const UploadImageMp3URL = () => {
         }).then( (result) => {
             if( result.isConfirmed ){
                 console.log( "isConfirmed = true :", result );
-                uploadDataToPinata( account?.address, "my song", previewImage, previewMp3, my_summary, my_lyric );
+                uploadDataToPinata( account?.address, songName, previewImage, previewMp3, my_summary, my_lyric );
             }
         });
     }
@@ -129,6 +155,10 @@ const UploadImageMp3URL = () => {
             <div>
                 <h4>請選擇音樂 : </h4>
                 <input type="file" accept="audio/*" onChange={ onChangeMp3 }/>
+            </div>
+            <div>
+                <h4>請輸入歌曲名 : </h4>
+                <input type="text" onChange={ onChangeSongName }/>
             </div>
             <div>
                 <h4>請輸入簡介 : </h4>

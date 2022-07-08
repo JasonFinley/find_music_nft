@@ -1,17 +1,18 @@
 import Layout from "../components/Layout";
-import { useEffect, useState } from 'react';
-import { useAccount } from "wagmi";
+import { useEffect, useState, useContext } from 'react';
+import { useAccount, useContractWrite } from "wagmi";
 import hotpotGetImageFromText from "../modules/Hotpot";
 import { pinataPinMetaData, pinataPinFileByImageURL, pinataGetIPFSFillPath } from "../modules/pinata";
 import Swal from 'sweetalert2'
-import youdaoTranslate from "../modules/youdao_translate";
+import ContextContractAddressABI from "../contexts/ContextContract";
 
 const Settingpage = () => {
 
+    const contractAddressABI = useContext( ContextContractAddressABI );
     const [ username, setUsername ] = useState( );
     const [ summary, setSummary ] = useState();
-    const [ userImageFile, setUserImageFile ] = useState();
-    const [ userImageURL, setUserImageURL ] = useState();
+    const [ userImageFile, setUserImageFile ] = useState("");
+    const [ userImageURL, setUserImageURL ] = useState("");
     const [ imageURLMethod, setImageURLMethod ] = useState( "upload" );
     const [ aiDrawText, setAiDrawText ] = useState( "robot is drawing" );
 
@@ -57,6 +58,14 @@ const Settingpage = () => {
         } );
     }
 
+    const setCreatorWhiteListData = useContractWrite(
+        contractAddressABI,
+        "setCreatorWhiteListData",
+        {
+            onError(error){ console.log( error.message ); }
+        }
+    );
+
     const btnClick = () => {
         if( account ){
 
@@ -67,15 +76,14 @@ const Settingpage = () => {
                 let ipfsImageCID = imageResponse.data.IpfsHash;
                 const ipfsImageURL = pinataGetIPFSFillPath( ipfsImageCID );
                 let pinataFileName = account.address.toString() + '.json';
-                pinataPinMetaData( {
-                    file_name : pinataFileName,
-                    image_info : {
-                        image_cid : ipfsImageCID.toString(),
-                        username : username,
-                        information : summary,
-                        create_time : new Date().toLocaleString().replace(',',''),
-                        image_url : ipfsImageURL,
-                    }
+                pinataPinMetaData( pinataFileName, {
+
+                    image_cid : ipfsImageCID.toString(),
+                    username : username,
+                    information : summary,
+                    create_time : new Date().toLocaleString().replace(',',''),
+                    image_url : ipfsImageURL,
+
                 } ).then( ( metaDataResponse ) => {
 
                     let ipfsMetaDataCID = metaDataResponse.data.IpfsHash;
@@ -85,6 +93,7 @@ const Settingpage = () => {
                     
                     //上鏈..
                     console.log( "setting data : ", ipfsMetaDataURL );
+                    setCreatorWhiteListData.write({ args : [ ipfsMetaDataURL ] });
 
                     Swal.close();
                 } );

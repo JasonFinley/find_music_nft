@@ -14,13 +14,13 @@ const URL_PIN_METADATA_TO_IPFS = 'https://api.pinata.cloud/pinning/pinJSONToIPFS
 export function pinataGetIPFSPath(){ return URL_PINATA_CLOUD_IPFS; }
 export function pinataGetIPFSFillPath( CID ){ return URL_PINATA_CLOUD_IPFS + CID; }
 
-export async function pinataPinFileBySRC( image_src, ext ){
+export async function pinataPinFileBySRC( src_uri, ext ){
 
     let response = null;
-    let file_name = uuidv4( image_src ) + ext;
+    let file_name = uuidv4( src_uri ) + ext;
 
     try{
-        const res = await fetch( image_src );
+        const res = await fetch( src_uri );
         const blob = await res.blob();
 
         const FormData = require( 'form-data' );
@@ -41,46 +41,46 @@ export async function pinataPinFileBySRC( image_src, ext ){
     return response;
 }
 
-export async function pinataGetMetaData( meta_data_url ){
+export async function pinataGetMetaData( dataURL ){
 
     const config = {
         method: 'get',
-        url: meta_data_url,
+        url: dataURL,
         headers: { 
             'Content-Type': 'application/json'
         }
     };
     
-    let image_info;
+    let pinataMetaData;
 
     try{
         const response = await Axios( config );
 //        console.log( "pinataGetMetaData : response =", response );
 //        console.log( "pinataGetMetaData : response.data =", response.data );
-        image_info = JSON.parse( response.data.imageData );
+        pinataMetaData = JSON.parse( response.data.ContentData );
 //        console.log( "pinataGetMetaData : response JSON to Obj =", image_info );
 
     } catch( error ) {
         console.log( error );
     }
-    return image_info;
+    return pinataMetaData;
 }
 
-export async function pinataPinMetaData( meta_data ){
+export async function pinataPinMetaData( objName, objData ){
 
-    const image_info_json = JSON.stringify( meta_data.image_info );
+    const jsonObjData = JSON.stringify( objData );
 
     const pinataData = {
         "pinataOptions" : { "cidVersion" : 1 },
         "pinataMetadata" : {
-            "name" : meta_data.file_name, 
+            "name" : objName, 
         },
         "pinataContent" : {
-            "imageData" : image_info_json,
+            "ContentData" : jsonObjData,
         }
     }
 
-    const json_meta_data = JSON.stringify( pinataData );
+    const jsonPinataMetaData = JSON.stringify( pinataData );
    
     const config = {
       method: 'post',
@@ -90,12 +90,8 @@ export async function pinataPinMetaData( meta_data ){
         'pinata_secret_api_key' : PINATA_API_SECRET,
         'Content-Type': 'application/json'
       },
-      data: json_meta_data,
+      data: jsonPinataMetaData,
     };
-
-    console.log( "meta_data =", meta_data );
-    console.log( "json_meta_data =", json_meta_data );
-//    console.log( "config =", config );
 
     try{
         const response = await Axios( config );

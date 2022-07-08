@@ -22,11 +22,11 @@ const Header = () => {
   const { disconnect } = useDisconnect();
   const { connect, connectors, error, isConnecting, pendingConnector } = useConnect();
 
-  const { activeChain, switchNetwork } = useNetwork({ chainId: chain.localhost.id });
+  const { activeChain, switchNetwork } = useNetwork({ chainId: chain.rinkeby.id });
 
   useEffect(() => {
-    if (activeChain && activeChain.id !== chain.localhost.id) {
-      switchNetwork(chain.localhost.id);
+    if (activeChain && activeChain.id !== chain.rinkeby.id) {
+      switchNetwork(chain.rinkeby.id);
     }
   }, [activeChain, switchNetwork]);
 
