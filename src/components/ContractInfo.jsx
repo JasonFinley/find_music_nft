@@ -44,10 +44,10 @@ const ContractInfo = () => {
                 (
                     <div>
                         <div>合約擁有者 : { getContractOwner?.data?.toString() }</div>
-                        <div>音樂創作者</div>
+                        <div>音樂創作者 : </div>
                         {
                             getWhiteListData?.data?.map( (item) => {
-                                return ( <div> { item?.creator.toString() }</div> )
+                                return ( <div key={item?.creator}> { item?.creator.toString() }</div> )
                             })
                         }
                         <div>共幾首歌 : { getTotalTokenIDs?.data?.toNumber() }</div>

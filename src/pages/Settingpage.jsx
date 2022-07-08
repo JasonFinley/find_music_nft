@@ -2,7 +2,7 @@ import Layout from "../components/Layout";
 import { useEffect, useState } from 'react';
 import { useAccount } from "wagmi";
 import hotpotGetImageFromText from "../modules/Hotpot";
-import { pinataPinMetaData, pinataPinFileByUrl, pinataGetIPFSFillPath } from "../modules/pinata";
+import { pinataPinMetaData, pinataPinFileByImageURL, pinataGetIPFSFillPath } from "../modules/pinata";
 import Swal from 'sweetalert2'
 import youdaoTranslate from "../modules/youdao_translate";
 
@@ -62,7 +62,7 @@ const Settingpage = () => {
 
             Swal.showLoading();
 
-            pinataPinFileByUrl( userImageURL ).then( ( imageResponse ) => {
+            pinataPinFileByImageURL( userImageURL ).then( ( imageResponse ) => {
 
                 let ipfsImageCID = imageResponse.data.IpfsHash;
                 const ipfsImageURL = pinataGetIPFSFillPath( ipfsImageCID );

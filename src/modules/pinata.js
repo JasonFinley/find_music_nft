@@ -14,10 +14,10 @@ const URL_PIN_METADATA_TO_IPFS = 'https://api.pinata.cloud/pinning/pinJSONToIPFS
 export function pinataGetIPFSPath(){ return URL_PINATA_CLOUD_IPFS; }
 export function pinataGetIPFSFillPath( CID ){ return URL_PINATA_CLOUD_IPFS + CID; }
 
-export async function pinataPinFileBySRC( image_src ){
+export async function pinataPinFileBySRC( image_src, ext ){
 
     let response = null;
-    let file_name = uuidv4( image_src ) + ".png";
+    let file_name = uuidv4( image_src ) + ext;
 
     try{
         const res = await fetch( image_src );
@@ -106,28 +106,16 @@ export async function pinataPinMetaData( meta_data ){
 
 }
 
-export function pinataPinFileByUrl( url ){
-    return pinataPinFileBySRC( url );
+export function pinataPinFileByImageURL( url ){
+    return pinataPinFileBySRC( url, ".png" );
+}
+
+export function pinataPinFileByMusicURL( url ){
+    return pinataPinFileBySRC( url, ".mp3" );
 }
 
 export function pinataPinFile( path_file ){
     return pinataPinFileBySRC( path_file );
-/*
-    const fs = require('fs');
-    let form = new FormData();
-    form.append( 'file', fs.createReadStream( path_file ));
-    const url = URL_PIN_FILE_TO_IPFS;
-    const header = {
-        'Content-Type': `multipart/form-data; boundary= ${form._boundary}`,
-        'pinata_api_key' : PINATA_API_KEY,
-        'pinata_secret_api_key' : PINATA_API_SECRET,
-    };
-
-    Axios.post( url, form, { headers : header } ).then( ( res ) => { 
-        console.log( res );
-     } ).catch( ( error ) => {
-        console.log( error );
-     });*/
 }
 
 export function pinataTestAuthentication(){

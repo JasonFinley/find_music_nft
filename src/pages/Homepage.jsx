@@ -3,24 +3,75 @@ import { useContext, useEffect, useState } from 'react';
 import { useAccount, useConnect, useDisconnect, useContractRead, useContractWrite, useContractEvent } from "wagmi"
 import CreatorCard from "../components/CreatorCard";
 import ContextContractAddressABI from "../contexts/ContextContract";
+import { pinataGetMetaData } from "../modules/pinata";
 
 const Homepage = () => {
 
-  const contractContext = useContext( ContextContractAddressABI );
+  const contractAddressABI = useContext( ContextContractAddressABI );
   const { data : account } = useAccount();
   const [ addWallet, setAddWallet ] = useState( "" );
 
+  const [ creatorMetaDataURL, setCreatorMetaDataURL ] = useState([]);
+  const [ creatorData, setCreatorData ] = useState([]);
+
   const getContractOwner = useContractRead( 
-    contractContext,
+    contractAddressABI,
     "getContractOwner",
     { watch : true }
   );
 
   const setContractAddWhiteList = useContractWrite( 
-    contractContext,
+    contractAddressABI,
     "addCreatorWhitelist",
     { 
       onError(error){ console.log( error.message ); }
+    }
+  );
+
+  const getCoreatorMetaDataURLFromContract = ( result ) => {
+    const newRes = result.map( (item) => {
+      return {
+        Creator : item.creator,
+        MetaDataURL : item.dataURL,
+      }
+    });
+    setCreatorMetaDataURL( newRes );
+  }
+
+  const getCreatorDataFromURL = async ( dataURL ) => {
+
+    const creatorData = [];
+    for( let i = 0 ; i < dataURL.length ; i++ )
+    {
+        await pinataGetMetaData( dataURL[i].MetaDataURL ).then( ( res ) => {
+//          console.log( res );
+          creatorData.push({
+            Creator : dataURL[i].Creator,
+            CreatorName : res.username,
+            Summary : res.information,
+            ImageURL : res.image_url
+          });
+        });
+    }
+
+    setCreatorData( creatorData );
+
+  }
+
+  useEffect( () => {
+
+    if( creatorMetaDataURL ){
+      getCreatorDataFromURL( creatorMetaDataURL );
+    }
+
+  }, [ creatorMetaDataURL ]);
+
+  const getWhiteListData = useContractRead(
+    contractAddressABI,
+    "getWhiteListData",
+    { 
+      watch : true,
+      onSuccess : ( result ) => { getCoreatorMetaDataURLFromContract( result ) },
     }
   );
 
@@ -33,6 +84,10 @@ const Homepage = () => {
 
   const onChangeAddWellet = ( e ) => {
     setAddWallet( e.target.value );
+  }
+
+  const btnDebugLog = () => {
+    console.log( getWhiteListData?.data );
   }
 
   return (
@@ -61,10 +116,26 @@ const Homepage = () => {
         }
         <h3>創作者</h3>
         <div>
-          <CreatorCard  creator={ "jason" }
-                        creatorURL={ "https://picsum.photos/256/256" }
-                        summary={ "my summary" }
-          />
+          {
+            creatorData?.map( (item) => {
+                return (
+                  <CreatorCard key={ item.Creator } 
+                            creator={ item.CreatorName }
+                            creatorURL={ item.ImageURL }
+                            summary={ item.Summary }
+                  />
+                )
+            } )
+          }
+          {
+            /*<div>
+              <CreatorCard  creator={ "jason" }
+                            creatorURL={ "https://picsum.photos/256/256" }
+                            summary={ "my summary" }
+              />
+              <button onClick={btnDebugLog}> LOG </button>
+            </div>*/
+          }
         </div>
       </div>
     </Layout>

@@ -30,7 +30,8 @@ contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
     mapping( address => uint256 ) private _creatorWhiteListDataIdx;
 
     event EventCreateMusicNFT( address owner, uint256 tokenID, string url );
-    event EventAddWhiteList( address creator, uint256 index, string url );
+    event EventAddWhiteList( address creator );
+    event EventUpdateWhiteList( address creator, uint256 index, string url );
 
     constructor() ERC721("Jason Finley Music NFT", "JFMN") {
         _contract_owner = msg.sender;
@@ -97,15 +98,37 @@ contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
     function addCreatorWhitelist( address creator ) public {
         require( _contract_owner == msg.sender, "you are not contract owner!!" );
         _isCreatorWhiteList[ creator ] = true;
+        emit EventAddWhiteList( creator );
     }
 
     function setCreatorWhiteListData( string memory createURL ) public {
 
         require( _isCreatorWhiteList[ msg.sender ] == true, "you are not in the whitelist !!" );
+        uint256 idx ;
 
-        _creatorWhiteListDataIdx[ msg.sender ] = _creatorWhiteListData.length;
-        _creatorWhiteListData.push( CreatorWhiteListData( msg.sender, createURL ) );
-        emit EventAddWhiteList( msg.sender, _creatorWhiteListDataIdx[ msg.sender ], createURL );
+        if( msg.sender == _contract_owner ){
+            idx = 0;
+        }else if( _creatorWhiteListDataIdx[ msg.sender ] == 0 ){
+            idx = _creatorWhiteListData.length;
+        }else{
+            idx = _creatorWhiteListDataIdx[ msg.sender ];
+        }
+        
+        updateCreatorWhiteListData( msg.sender, idx, createURL );
+    }
+
+    function updateCreatorWhiteListData( address creator, uint256 idx, string memory createURL ) internal {
+
+        if( idx >= _creatorWhiteListData.length ){
+
+            _creatorWhiteListDataIdx[ creator ] = _creatorWhiteListData.length;
+            _creatorWhiteListData.push( CreatorWhiteListData( creator, createURL ) );
+
+        }else{
+            _creatorWhiteListData[ idx ].dataURL = createURL;
+        }
+
+        emit EventUpdateWhiteList( creator, _creatorWhiteListDataIdx[ creator ], createURL );
     }
 
     function createMusicNFT( uint256 tokenID, string memory musicMetaURL ) public {

@@ -2,9 +2,12 @@
 import { useEffect, useState } from 'react';
 import MusicNFTCard from './MusicNFTCard';
 import Swal from 'sweetalert2'
-import { findMatchingRequiredOptions } from 'web3modal';
+import { useAccount, useConnect, useDisconnect, useContractRead, useContractWrite, useContractEvent } from "wagmi"
+import { pinataPinMetaData, pinataPinFileByImageURL, pinataPinFileByMusicURL, pinataGetIPFSFillPath } from "../modules/pinata";
 
 const UploadImageMp3URL = () => {
+
+    const { data: account } = useAccount();
 
     const [ uploadImageURL, setUploadImageURL] = useState( "" );
     const [ uploadMp3URL, setUploadMp3URL] = useState( "" );
@@ -61,11 +64,48 @@ const UploadImageMp3URL = () => {
         return previewString;
     }
 
+    const uploadDataToPinata = async ( creatorName, musicName, imageURL, musicURL, summary, lyric ) => {
+        if( account ){
+
+
+            Swal.fire( "Please waiting..." );
+
+            const pinataImage = await pinataPinFileByImageURL( imageURL );
+            const pinataMusic = await pinataPinFileByMusicURL( musicURL );
+
+            const metaData = {
+                file_name : musicName + ".json",
+                image_info : {
+                    Creator : account?.address,
+                    MusicName : musicName,
+                    ImageURL : pinataGetIPFSFillPath( pinataImage.data.IpfsHash ),
+                    MusicURL : pinataGetIPFSFillPath( pinataMusic.data.IpfsHash ),
+                    Summary : summary,
+                    Lyric : lyric,
+                    create_time : new Date().toLocaleString().replace(',',''),
+                }
+            };
+
+            pinataPinMetaData( metaData ).then( ( pinataMetaData ) => {
+
+                const ipfsMetaDataURL = pinataGetIPFSFillPath( pinataMetaData.data.IpfsHash );
+                //上鏈..
+                console.log( "setting data : ", ipfsMetaDataURL );
+    
+                Swal.close();
+
+            });
+
+        }else{
+            Swal.fire( "請連接MetaMask" );
+        }
+    }
+
     const onBtnPreview = () => {
 
         const my_summary = document.querySelector("#customer_summary").value;
         const my_lyric = document.querySelector("#customer_lyric").value;
-        const my_preview_html = getPreviewhtml("jason", "my song", previewImage, previewMp3, my_summary, my_lyric );
+        const my_preview_html = getPreviewhtml( account?.address, "my song", previewImage, previewMp3, my_summary, my_lyric );
 
         Swal.fire({
             title : '預覽',
@@ -75,6 +115,7 @@ const UploadImageMp3URL = () => {
         }).then( (result) => {
             if( result.isConfirmed ){
                 console.log( "isConfirmed = true :", result );
+                uploadDataToPinata( account?.address, "my song", previewImage, previewMp3, my_summary, my_lyric );
             }
         });
     }
