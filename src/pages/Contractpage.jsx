@@ -8,7 +8,6 @@ const Contractpage = () => {
     <Layout>
       <div className="d-flex flex-column align-items-center justify-content-center my-5">
       <h2> 檢查合約狀態 </h2>
-        <div> <PinataConfig/> </div>
         <div> <ContractInfo/> </div>
       </div>
     </Layout>
