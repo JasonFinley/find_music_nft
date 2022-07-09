@@ -17,11 +17,7 @@ const CreatorCardStyled = styled.header`
     }
 `;
 
-const CreatorCard = ( { creatorAddress, creatorName, creatorURL, summary, onPress } ) => {
-
-    const btnClick = () => {
-        onPress( creatorAddress );
-    }
+const CreatorCard = ( { creatorAddress, creatorName, creatorURL, summary } ) => {
 
     return (
         <CreatorCardStyled>
@@ -33,7 +29,6 @@ const CreatorCard = ( { creatorAddress, creatorName, creatorURL, summary, onPres
                     <div>作者 : { creatorName }</div>
                     <div>簡介 : { summary }</div>
                 </div>
-                <button onClick={ btnClick } >看作品</button>
             </div>
         </CreatorCardStyled>
     )

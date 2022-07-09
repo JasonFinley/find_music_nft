@@ -1,5 +1,4 @@
 import Layout from "../components/Layout";
-import PinataConfig from "../components/PinataConfig";
 import ContractInfo from "../components/ContractInfo";
 
 const Contractpage = () => {

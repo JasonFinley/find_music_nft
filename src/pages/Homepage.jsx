@@ -136,14 +136,15 @@ const Homepage = () => {
           {
             creatorData?.map( (item) => {
                 return (
-                  <CreatorCard className="col"
-                            key={ item.Creator }
-                            creatorAddress={ item.Creator }
-                            creatorName={ item.CreatorName }
-                            creatorURL={ item.ImageURL }
-                            summary={ item.Summary }
-                            onPress={ onClickGoToCreator }
-                  />
+                  <a href={ "/viewuser/"+item?.Creator }>
+                    <CreatorCard className="col"
+                              key={ item.Creator }
+                              creatorAddress={ item.Creator }
+                              creatorName={ item.CreatorName }
+                              creatorURL={ item.ImageURL }
+                              summary={ item.Summary }
+                    />
+                  </a>
                 )
             } )
           }
