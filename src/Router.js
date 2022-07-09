@@ -4,6 +4,7 @@ import Contractpage from './pages/Contractpage';
 import Userpage from './pages/Userpage';
 import Useruploadpage from './pages/Useruploadpage';
 import Settingpage from './pages/Settingpage';
+import Viewuserpage from './pages/Viewuserpage';
 
 const Router = () => {
   return (
@@ -14,6 +15,7 @@ const Router = () => {
         <Route path="/setting" element={<Settingpage />} />
         <Route path="/upload" element={<Useruploadpage />} />
         <Route path="/contract" element={<Contractpage />} />
+        <Route path="/viewuser/:creatorAddress" element={<Viewuserpage/>} />
       </Routes>
     </BrowserRouter>
   );

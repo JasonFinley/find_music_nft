@@ -4,8 +4,10 @@ import { useAccount, useConnect, useDisconnect, useContractRead, useContractWrit
 import CreatorCard from "../components/CreatorCard";
 import ContextContractAddressABI from "../contexts/ContextContract";
 import { pinataGetMetaData } from "../modules/pinata";
+import { generatePath, useNavigate } from "react-router-dom";
 
 const Homepage = () => {
+  const navigation = useNavigate();
 
   const contractAddressABI = useContext( ContextContractAddressABI );
   const { data : account } = useAccount();
@@ -87,7 +89,15 @@ const Homepage = () => {
   }
 
   const btnDebugLog = () => {
-    console.log( getWhiteListData?.data );
+//    console.log( navigation );
+//    const path = generatePath( "/viewuser/0xf8789AB568eC6155Eb3F9056144346590dbF14cc");
+//    navigation( path);
+  }
+
+  const onClickGoToCreator = ( addressCreator ) => {
+    const base_path = addressCreator? ( "/viewuser/" + addressCreator.toString() ) : ( "/user" );
+    const path = generatePath( base_path );
+    navigation( path );
   }
 
   return (
@@ -127,10 +137,12 @@ const Homepage = () => {
             creatorData?.map( (item) => {
                 return (
                   <CreatorCard className="col"
-                            key={ item.Creator } 
-                            creator={ item.CreatorName }
+                            key={ item.Creator }
+                            creatorAddress={ item.Creator }
+                            creatorName={ item.CreatorName }
                             creatorURL={ item.ImageURL }
                             summary={ item.Summary }
+                            onPress={ onClickGoToCreator }
                   />
                 )
             } )
