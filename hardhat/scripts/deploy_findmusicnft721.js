@@ -14,12 +14,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const JasonFinleyMusicNFT = await hre.ethers.getContractFactory("JasonFinleyMusicNFT");
-  const jasonfinleymusicnft = await JasonFinleyMusicNFT.deploy();
+  const FindMusicNFT = await hre.ethers.getContractFactory("FindMusicNFT");
+  const findmusicnft = await FindMusicNFT.deploy();
 
-  await jasonfinleymusicnft.deployed();
+  await findmusicnft.deployed();
 
-  console.log("JasonFinleyMusicNFT deployed to:", jasonfinleymusicnft.address);
+  console.log("FindMusicNFT deployed to:", findmusicnft.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

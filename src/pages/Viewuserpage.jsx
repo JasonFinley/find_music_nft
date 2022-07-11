@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
+import { useContractRead } from "wagmi";
 import { useContext, useEffect, useState } from 'react';
-import { useAccount, useBalance, useContractRead } from "wagmi";
 import ContextContractAddressABI from "../contexts/ContextContract";
 import MusicNFTCard from "../components/MusicNFTCard";
 import { pinataGetMetaData } from "../modules/pinata";
@@ -18,16 +18,14 @@ const Viewuserpage = () => {
   const [ creatorData, setCreatorData] = useState();
 
   const getCreatorDataFromURL = async ( dataURL ) => {
-    console.log( dataURL );
-    await pinataGetMetaData( dataURL.MetaDataURL ).then( ( res ) => {
-      console.log( res );
+    await pinataGetMetaData( dataURL?.MetaDataURL ).then( ( res ) => {
       setCreatorData( {
         Creator : dataURL.Creator,
         CreatorName : res.username,
         Summary : res.information,
         ImageURL : res.image_url
       } );
-    });
+    }).catch( (err) => {console.log(err)} );
   }
 
   useEffect( () => {
@@ -39,10 +37,9 @@ const Viewuserpage = () => {
   }, [ creatorMetaDataURL ]); 
 
   const getCoreatorMetaDataURLFromContract = ( result ) => {
-    console.log( result );
     setCreatorMetaDataURL( {
-      Creator : result.creator,
-      MetaDataURL : result.dataURL,
+      Creator : result?.creator,
+      MetaDataURL : result?.dataURL,
     });
   }
 
@@ -58,8 +55,9 @@ const Viewuserpage = () => {
 
   const parseMusicNFTFromContractMetaData = async ( result ) => {
     const MusicNFT = [];
-    for( let i = 0 ; i < result.length ; i++ )
+    for( let i = 0 ; i < result?.length ; i++ )
     {
+      if( result[i] ){
         await pinataGetMetaData( result[i].MusicNFTMetaURL ).then( ( res ) => {
           MusicNFT.push({
             TokenID : result[i].MusicNFTTokenID,
@@ -71,6 +69,7 @@ const Viewuserpage = () => {
             MusicURL : res.MusicURL,
           });
         });
+      }
     }
 
     setMusicNFTData( MusicNFT );
@@ -86,8 +85,7 @@ const Viewuserpage = () => {
 
   const getMusicNFTDataFromContract = ( result ) => {
 
-    console.log(result  );
-    const newRes = result.map( (item) => {
+    const newRes = result?.map( (item) => {
       return {
         Creator : item.creator,
         MusicNFTTokenID : item.tokenID.toNumber(),

@@ -17,7 +17,7 @@ const Userpage = () => {
 
   const parseMusicNFTFromContractMetaData = async ( result ) => {
     const MusicNFT = [];
-    for( let i = 0 ; i < result.length ; i++ )
+    for( let i = 0 ; i < result?.length ; i++ )
     {
         await pinataGetMetaData( result[i].MusicNFTMetaURL ).then( ( res ) => {
           MusicNFT.push({
@@ -45,8 +45,8 @@ const Userpage = () => {
 
   const getMusicNFTDataFromContract = ( result ) => {
 
-    console.log(result  );
-    const newRes = result.map( (item) => {
+//    console.log(result  );
+    const newRes = result?.map( (item) => {
       return {
         Creator : item.creator,
         MusicNFTTokenID : item.tokenID.toNumber(),

@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
+contract FindMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
 
     struct CreatorWhiteListData{
         address creator;
@@ -33,7 +33,7 @@ contract JasonFinleyMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
     event EventAddWhiteList( address creator );
     event EventUpdateWhiteList( address creator, uint256 index, string url );
 
-    constructor() ERC721("JasonFinleyMusicNFT", "JFMN") {
+    constructor() ERC721("FindMusicNFT", "FMN") {
         _contract_owner = msg.sender;
         _isCreatorWhiteList[ msg.sender ] = true;
     }

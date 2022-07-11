@@ -31,7 +31,7 @@ const Homepage = () => {
   );
 
   const getCoreatorMetaDataURLFromContract = ( result ) => {
-    const newRes = result.map( (item) => {
+    const newRes = result?.map( (item) => {
       return {
         Creator : item.creator,
         MetaDataURL : item.dataURL,
@@ -43,7 +43,7 @@ const Homepage = () => {
   const getCreatorDataFromURL = async ( dataURL ) => {
 
     const creatorData = [];
-    for( let i = 0 ; i < dataURL.length ; i++ )
+    for( let i = 0 ; i < dataURL?.length ; i++ )
     {
         await pinataGetMetaData( dataURL[i].MetaDataURL ).then( ( res ) => {
 //          console.log( res );
@@ -103,13 +103,13 @@ const Homepage = () => {
   return (
     <Layout>
       <div className="d-flex flex-column align-items-center justify-content-center">
-        <h1>Music NFT</h1>
+        <h1>Find Music NFT</h1>
         <div>給玩音樂的自由創作者上鏈的小地方</div>
         <div>想要如何玩音樂，就如何玩</div>
         <div>說不定玩一玩，還能創作音樂賺錢 !! Who knows</div>
         
         <ul> <h3> 目前想法 : </h3>
-          <li>原創者 - 創作音樂小曲並上傳到IPFS, 區塊鏈記錄相關資訊。</li>
+          <li>原創者 - 創作音樂曲目並上傳到IPFS, 區塊鏈記錄相關資訊。</li>
           <li>類創作者 - 購買原創者的音樂或版權。再自行創作或合成新曲風之類的。</li>
           <li>粉絲 - 購買創作者的音樂或版權。</li>
         </ul>

@@ -1,4 +1,3 @@
-import { contractAddress, contractABI } from "../configs/contract"
 import ContextContractAddressABI from "../contexts/ContextContract"
 import { useAccount, useContractRead, useContractWrite, useContractEvent } from "wagmi"
 import { useContext } from "react";
@@ -59,7 +58,10 @@ const ContractInfo = () => {
                 )
 
             }
-            <button onClick={ btnDebugLog }> LOG </button>
+            {
+            //<button onClick={ btnDebugLog }> LOG </button>
+            }
+
         </div>
     )
 }

@@ -1,5 +1,5 @@
 export const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-export const contractRinkebyAddress = '0x3e0Ac86BB0FDD43a299fc57E7D116A4dDa685081';
+export const contractRinkebyAddress = '0x3A268aeF6350c80990993313c69771b586083E16';
 export const contractABI = [
   {
     "inputs": [],
@@ -267,7 +267,7 @@ export const contractABI = [
             "type": "string"
           }
         ],
-        "internalType": "struct JasonFinleyMusicNFT.CreatorWhiteListData",
+        "internalType": "struct FindMusicNFT.CreatorWhiteListData",
         "name": "",
         "type": "tuple"
       }
@@ -303,7 +303,7 @@ export const contractABI = [
             "type": "string"
           }
         ],
-        "internalType": "struct JasonFinleyMusicNFT.MusicNFTData[]",
+        "internalType": "struct FindMusicNFT.MusicNFTData[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -344,7 +344,7 @@ export const contractABI = [
             "type": "string"
           }
         ],
-        "internalType": "struct JasonFinleyMusicNFT.MusicNFTData",
+        "internalType": "struct FindMusicNFT.MusicNFTData",
         "name": "",
         "type": "tuple"
       }
@@ -380,7 +380,7 @@ export const contractABI = [
             "type": "string"
           }
         ],
-        "internalType": "struct JasonFinleyMusicNFT.MusicNFTData",
+        "internalType": "struct FindMusicNFT.MusicNFTData",
         "name": "",
         "type": "tuple"
       }
@@ -512,7 +512,7 @@ export const contractABI = [
             "type": "string"
           }
         ],
-        "internalType": "struct JasonFinleyMusicNFT.CreatorWhiteListData[]",
+        "internalType": "struct FindMusicNFT.CreatorWhiteListData[]",
         "name": "",
         "type": "tuple[]"
       }
