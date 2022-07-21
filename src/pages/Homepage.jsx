@@ -4,7 +4,7 @@ import { useAccount, useConnect, useDisconnect, useContractRead, useContractWrit
 import CreatorCard from "../components/CreatorCard";
 import ContextContractAddressABI from "../contexts/ContextContract";
 import { pinataGetMetaData } from "../modules/pinata";
-import { generatePath, useNavigate } from "react-router-dom";
+import { generatePath, useNavigate, Link } from "react-router-dom";
 
 const Homepage = () => {
   const navigation = useNavigate();
@@ -136,7 +136,7 @@ const Homepage = () => {
           {
             creatorData?.map( (item) => {
                 return (
-                  <a href={ "/viewuser/"+item?.Creator }>
+                  <Link to={ "/viewuser/"+item?.Creator }>
                     <CreatorCard className="col"
                               key={ item.Creator }
                               creatorAddress={ item.Creator }
@@ -144,7 +144,7 @@ const Homepage = () => {
                               creatorURL={ item.ImageURL }
                               summary={ item.Summary }
                     />
-                  </a>
+                  </Link>
                 )
             } )
           }

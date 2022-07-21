@@ -110,10 +110,10 @@ const Viewuserpage = () => {
     <Layout>
       <div className="d-flex flex-column align-items-center justify-content-center">
         <div>
+          <h2>創作者 :{ creatorData?.CreatorName } </h2>
           <img src={ creatorData?.ImageURL }/>
           <div>
             <h3>錢包:{ creatorData?.Creator } </h3>
-            <h3>姓名:{ creatorData?.CreatorName } </h3>
             <div>簡介: { creatorData?.Summary } </div>
           </div>
         </div>

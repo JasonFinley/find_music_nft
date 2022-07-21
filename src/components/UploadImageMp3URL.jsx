@@ -117,7 +117,7 @@ const UploadImageMp3URL = () => {
 
                 //上鏈..
                 console.log( "setting data : ", ipfsMetaDataURL );
-                createMusicNFT.write( { args : [ musicNFTTokenID, ipfsMetaDataURL ] } );
+                createMusicNFT.write( { args : [ ipfsMetaDataURL ] } );
                 Swal.close();
 
             });

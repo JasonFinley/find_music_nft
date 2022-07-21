@@ -90,16 +90,6 @@ const Userpage = () => {
               )
              } )
           }
-          {/*
-            <MusicNFTCard songName={ "My Song" }
-                          owner={ "Jason" }
-                          imageURL={ "https://picsum.photos/256/256" }
-                          audioURL={ "https://ipfs.io/ipfs/QmNVECLuxEgfb3E6GmcAXzXDbt7hqWJzYW8qQoVcav9bni/animation.mpga" }
-                          summary={ "my summary" }
-                          lyric={ "my lyric" }
-            />*/
-          }
-            
         </div>
       </div>
     </Layout>
