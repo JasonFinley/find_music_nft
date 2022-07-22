@@ -107,6 +107,7 @@ const Homepage = () => {
         <div>給玩音樂的自由創作者上鏈的小地方</div>
         <div>想要如何玩音樂，就如何玩</div>
         <div>說不定玩一玩，還能創作音樂賺錢 !! Who knows</div>
+        <div>Follow OpeaSea MetaData !!</div>
         
         <ul> <h3> 目前想法 : </h3>
           <li>原創者 - 創作音樂曲目並上傳到IPFS, 區塊鏈記錄相關資訊。</li>
