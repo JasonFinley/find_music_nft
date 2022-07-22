@@ -57,7 +57,7 @@ export async function pinataGetMetaData( dataURL ){
         const response = await Axios( config );
 //        console.log( "pinataGetMetaData : response =", response );
 //        console.log( "pinataGetMetaData : response.data =", response.data );
-        pinataMetaData = JSON.parse( response.data.ContentData );
+        pinataMetaData = response.data;//JSON.parse( response.data );
 //        console.log( "pinataGetMetaData : response JSON to Obj =", image_info );
 
     } catch( error ) {
@@ -68,19 +68,17 @@ export async function pinataGetMetaData( dataURL ){
 
 export async function pinataPinMetaData( objName, objData ){
 
-    const jsonObjData = JSON.stringify( objData );
-
     const pinataData = {
-        "pinataOptions" : { "cidVersion" : 1 },
-        "pinataMetadata" : {
+        pinataOptions : { "cidVersion" : 1 },
+        pinataMetadata : {
             "name" : objName, 
         },
-        "pinataContent" : {
-            "ContentData" : jsonObjData,
-        }
+        pinataContent : objData,
     }
 
     const jsonPinataMetaData = JSON.stringify( pinataData );
+
+    console.log( "jsonPinataMetaData", jsonPinataMetaData );
    
     const config = {
       method: 'post',

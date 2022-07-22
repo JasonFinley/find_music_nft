@@ -22,12 +22,12 @@ const Userpage = () => {
         await pinataGetMetaData( result[i].MusicNFTMetaURL ).then( ( res ) => {
           MusicNFT.push({
             TokenID : result[i].MusicNFTTokenID,
-            Creator : res.Creator,
-            MusicName : res.MusicName,
-            Summary : res.Summary,
-            Lyric : res.Lyric,
-            ImageURL : res.ImageURL,
-            MusicURL : res.MusicURL,
+            Creator : res.creator,
+            MusicName : res.name,
+            Summary : res.description,
+            Lyric : res.lyric,
+            ImageURL : res.image,
+            MusicURL : res.animation_url,
           });
         });
     }
@@ -45,7 +45,6 @@ const Userpage = () => {
 
   const getMusicNFTDataFromContract = ( result ) => {
 
-//    console.log(result  );
     const newRes = result?.map( (item) => {
       return {
         Creator : item.creator,
