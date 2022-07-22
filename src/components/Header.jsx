@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import { useAccount, useConnect, useDisconnect, useBalance, useNetwork, chain } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useNetwork, chain } from "wagmi";
 
 const StyledHeader = styled.header`
   background: rgb(21, 21, 21);

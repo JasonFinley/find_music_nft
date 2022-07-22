@@ -132,7 +132,7 @@ const Viewuserpage = () => {
                   lyric={ item.Lyric }
                 />
               )
-             } )
+            } )
           }
         </div>
       </div>

@@ -1,10 +1,11 @@
 
 import { useEffect, useState, useContext } from 'react';
 import Swal from 'sweetalert2'
-import { useAccount, useConnect, useDisconnect, useContractRead, useContractWrite, useContractEvent } from "wagmi"
+import { useAccount, useContractWrite } from "wagmi"
 import { pinataPinMetaData, pinataPinFileByImageURL, pinataPinFileByMusicURL, pinataGetIPFSFillPath } from "../modules/pinata";
 import ContextContractAddressABI from "../contexts/ContextContract";
 import { v4 as uuidv4 } from 'uuid';
+import getOpenSeaNFTMetaData from "../modules/opensea_metadata";
 
 const UploadImageMp3URL = () => {
 
@@ -90,17 +91,23 @@ const UploadImageMp3URL = () => {
     const uploadDataToPinata = async ( creatorName, musicName, imageURL, musicURL, summary, lyric ) => {
         if( account ){
 
-
             Swal.fire( "Please waiting..." );
 
             const pinataImage = await pinataPinFileByImageURL( imageURL );
             const pinataMusic = await pinataPinFileByMusicURL( musicURL );
 
-            const musicNFTUUID = cidTOuuidString( pinataMusic.data.IpfsHash );
-            const musicNFTTokenID = parseInt( '0x' + musicNFTUUID, 16 );
-
             const fileName = musicName + ".json";
-            const metaData = {
+            const metaData = getOpenSeaNFTMetaData(
+                account?.address,
+                musicName, 
+                pinataGetIPFSFillPath( pinataImage.data.IpfsHash ), 
+                summary, 
+                pinataGetIPFSFillPath( pinataMusic.data.IpfsHash ),
+                new Date().getTime(),
+                lyric,
+            );
+
+/*            const metaData = {
                     Creator : account?.address,
                     TokenID : musicNFTTokenID,
                     MusicName : musicName,
@@ -109,7 +116,7 @@ const UploadImageMp3URL = () => {
                     Summary : summary,
                     Lyric : lyric,
                     create_time : new Date().toLocaleString().replace(',',''),
-            };
+            };*/
 
             pinataPinMetaData( fileName, metaData ).then( ( pinataMetaData ) => {
 

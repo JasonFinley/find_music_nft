@@ -1,5 +1,5 @@
 export const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-export const contractRinkebyAddress = '0x3A268aeF6350c80990993313c69771b586083E16';
+export const contractRinkebyAddress = '0x5AE502DAb01d330a8DDc62f7B44AF857aA3b7906';
 export const contractABI = [
   {
     "inputs": [],
@@ -196,11 +196,6 @@ export const contractABI = [
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenID",
-        "type": "uint256"
-      },
       {
         "internalType": "string",
         "name": "musicMetaURL",
