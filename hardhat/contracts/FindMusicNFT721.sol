@@ -4,7 +4,7 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/drafts/Counters.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract FindMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
 
@@ -139,6 +139,7 @@ contract FindMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
 
         require( _isCreatorWhiteList[ msg.sender ] == true, "you are not in whitelist!!" );
 
+        _tokenIds.increment();
         uint256 tokenID = _tokenIds.current();
 
         _mint( msg.sender, tokenID );
@@ -148,7 +149,6 @@ contract FindMusicNFT is ERC721, ERC721Enumerable, ERC721URIStorage{
         _musicNFTData[ msg.sender ].push( MusicNFTData( msg.sender, tokenID, musicMetaURL ) );
 
         emit EventCreateMusicNFT( msg.sender, tokenID, musicMetaURL );
-        _tokenIds.increment();
     }
 
     function _baseURI() internal pure override returns (string memory) {
