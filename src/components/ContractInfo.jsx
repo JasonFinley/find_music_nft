@@ -36,9 +36,14 @@ const ContractInfo = () => {
         console.log( getTotalTokenIDs );
     }
 
+    const getContractAddress = () => {
+        return "https://rinkeby.etherscan.io/address/" + contractContext.addressOrName;
+    }
+
     return (
         <div>
             <h3>目前智能合約資訊</h3>
+            <div> 合約地址 : <a href={getContractAddress()} target="blank"> { contractContext.addressOrName } </a></div>
             { account? 
                 (
                     <div>
